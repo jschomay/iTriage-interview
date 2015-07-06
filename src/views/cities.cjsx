@@ -17,14 +17,19 @@ module.exports = React.createClass
 
   componentDidMount: ->
     http.get "http://private-anon-01f9694a7-codetestapi.apiary-mock.com/cities", (cities) =>
-      @isMounted()
-      @setState cities: cities.body, status: cities.status
+      if @isMounted()
+        @setState cities: cities.body, status: cities.status
 
   render: ->
     console.log @state.status
-    cityToLi = (cityName) ->
+    cityToLi = (cityName) =>
       cityNameForDisplay = capitalizeEachWord cityName
-      <li key=cityName>{cityNameForDisplay}</li>
+      <li
+        key=cityName
+        onClick={@props.clickHandler.bind null, cityName, cityNameForDisplay}
+      >
+        {cityNameForDisplay}
+      </li>
 
     if R.keys(@state.cities).length
       content = R.map cityToLi, R.keys(@state.cities)
