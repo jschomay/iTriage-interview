@@ -1,5 +1,8 @@
-Hello = React.createClass
+Cities = require "./cities"
+
+Main = React.createClass
+  displayName: "Main"
   render: ->
-    <div>Hello {@props.name}</div>
+    <Cities />
  
- React.render(<Hello name="World" />, document.getElementById('app'));
+ React.render(<Main />, document.getElementById('app'));
