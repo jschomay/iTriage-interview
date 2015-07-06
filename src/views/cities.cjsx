@@ -1,3 +1,5 @@
+http = require "../services/http"
+
 capitalizeFirstLetter = (s) ->
   firstLetter = s.slice(0,1)
   firstLetter.toUpperCase() + s.slice(1, s.length)
@@ -10,16 +12,24 @@ capitalizeEachWord = (s) ->
 module.exports = React.createClass
   displayName: "Cities"
   getInitialState: ->
-    cities:
-      chicago: {}
-      denver: {}
-      "new york": {}
+    cities: {}
+    status: ""
+
+  componentDidMount: ->
+    http.get "http://private-anon-01f9694a7-codetestapi.apiary-mock.com/cities", (cities) =>
+      @isMounted()
+      @setState cities: cities.body, status: cities.status
 
   render: ->
+    console.log @state.status
     cityToLi = (cityName) ->
       cityNameForDisplay = capitalizeEachWord cityName
-      <li>{cityNameForDisplay}</li>
+      <li key=cityName>{cityNameForDisplay}</li>
 
-    cities = R.map cityToLi, R.keys(@state.cities)
-    <ul>{cities}</ul>
+    if R.keys(@state.cities).length
+      content = R.map cityToLi, R.keys(@state.cities)
+    else
+      content = "Loading cities..."
+
+    <ul>{content}</ul>
  
